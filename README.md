@@ -12,7 +12,9 @@ The YouTube Video Downloader and Info API is a Flask-based Python project that e
 ## Sponsor
 This project is sponsored by HuntAPI. HuntAPI is a platform for downloading videos. Visit us at [huntapi.com](https://huntapi.com).
 
-![HuntAPI Logo](./logo-dark.png)
+<a href="https://huntapi.com">
+    <img src="./logo-dark.png" width="300" alt="HuntAPI Logo">
+</a>
 
 ## Key Features
 - Multi-resolution YouTube video downloads
