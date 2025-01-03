@@ -4,6 +4,37 @@ import os
 import subprocess
 from urllib.parse import urlparse, parse_qs
 
+# Set page config
+st.set_page_config(
+    page_title="YouTube Video Downloader",
+    layout="wide",
+    initial_sidebar_state="collapsed",
+    menu_items={
+        'Get Help': None,
+        'Report a bug': None,
+        'About': None
+    },
+    page_icon="📹"
+)
+
+# Set dark theme
+st.markdown("""
+    <style>
+        .stApp {
+            background-color: #0E1117;
+            color: #FAFAFA;
+        }
+        .stButton>button {
+            background-color: #262730;
+            color: #FAFAFA;
+        }
+        .stTextInput>div>div>input {
+            background-color: #262730;
+            color: #FAFAFA;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 def check_ffmpeg():
     """Check if ffmpeg is installed"""
     try:
@@ -71,9 +102,6 @@ def download_video(url, download_type="video"):
         st.error(f"Error downloading: {str(e)}")
         st.info("If the error persists, try updating yt-dlp using: pip install -U yt-dlp")
         return None
-
-# Set page config
-st.set_page_config(page_title="YouTube Video Downloader", layout="wide")
 
 # Main app
 st.title("YouTube Video Downloader")
