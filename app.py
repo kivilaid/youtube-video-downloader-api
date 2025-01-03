@@ -35,23 +35,6 @@ st.set_page_config(
     page_icon="📹"
 )
 
-# Check FFmpeg at startup
-ffmpeg_available = check_ffmpeg()
-if not ffmpeg_available:
-    st.warning("""
-    ⚠️ FFmpeg is not installed. Audio downloads will not work until FFmpeg is installed.
-    
-    Installation instructions:
-    1. Windows:
-       - Download from https://ffmpeg.org/download.html
-       - Add FFmpeg to your system PATH
-    2. Mac:
-       - Use Homebrew: `brew install ffmpeg`
-    3. Linux:
-       - Ubuntu/Debian: `sudo apt-get install ffmpeg`
-       - Fedora: `sudo dnf install ffmpeg`
-    """)
-
 # Set dark theme and video size
 st.markdown("""
     <style>
