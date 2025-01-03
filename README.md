@@ -1,66 +1,43 @@
-# YouTube Video Downloader and Info API
+# YouTube Video Downloader
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+A Streamlit web application that allows you to download YouTube videos as audio (MP3) or video with audio.
 
-## Description
-The YouTube Video Downloader and Info API is a Flask-based Python project that enables video downloads and detailed information retrieval using Pytube. This versatile tool offers two core functionalities:
+## Features
 
-1. **Video Downloads:** Download YouTube videos by specifying the URL and desired resolution.
+- Input YouTube video URL
+- Preview video before downloading
+- Download options:
+  - Audio only (MP3 format)
+  - Video with audio (best quality)
+- Downloads are saved in a local `downloads` folder
 
-2. **Video Information:** Retrieve comprehensive video details including title, author, duration, view count, description, and publication date.
+## Requirements
 
-## Sponsor
-This project is sponsored by HuntAPI. HuntAPI is a platform for downloading videos. Visit us at [huntapi.com](https://huntapi.com).
+- Python 3.7+
+- FFmpeg (required for audio extraction)
 
-<a href="https://huntapi.com">
-    <img src="./logo-dark.png" width="300" alt="HuntAPI Logo">
-</a>
+## Installation
 
-## Key Features
-- Multi-resolution YouTube video downloads
-- Comprehensive video metadata retrieval
-- Robust error handling
-- RESTful JSON API endpoints for seamless integration
-- Cross-platform compatibility
+1. Install FFmpeg if you haven't already:
+   - Windows: Download from https://ffmpeg.org/download.html
+   - Make sure FFmpeg is added to your system PATH
 
-## Technology Stack
-- Python 3.x
-- Flask (API framework)
-- Pytube (YouTube integration)
-- re (URL validation)
-
-## Setup and Usage
-1. Clone the repository: 
-bash
-git clone https://github.com/huntapi/youtube-video-downloader-api.git
-```
-2. Install dependencies:
+2. Install Python dependencies:
 ```bash
-pip install flask pytube
+pip install -r requirements.txt
 ```
-3. Launch the application:
+
+## Usage
+
+1. Run the Streamlit app:
 ```bash
-python main.py
+streamlit run app.py
 ```
 
-## API Endpoints
+2. Open your web browser and navigate to the provided URL (usually http://localhost:8501)
+3. Paste a YouTube video URL
+4. Choose your preferred download option
 
-### Video Download
-- **Endpoint:** `/download/<resolution>`
-- **Method:** POST
-- **Request Body:**
-```json
-{
-    "url": "https://www.youtube.com/watch?v=VIDEO_ID"
-}
-```
+## Note
 
-### Video Information
-- **Endpoint:** `/video_info`
-- **Method:** POST
-- **Request Body:**
-```json
-{
-    "url": "https://www.youtube.com/watch?v=VIDEO_ID"
-}
-```
+Downloads will be saved in a `downloads` folder in the same directory as the application. 
