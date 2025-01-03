@@ -107,10 +107,6 @@ def sanitize_filename(title):
 
 def download_video(url, download_type="video"):
     """Download video using yt-dlp with specified format"""
-    if download_type == "audio" and not ffmpeg_available:
-        st.error("FFmpeg is required for audio downloads. Please install FFmpeg first.")
-        return None, None
-
     # Common options to handle API issues
     common_opts = {
         'no_warnings': True,
@@ -122,58 +118,30 @@ def download_video(url, download_type="video"):
     if download_type == "audio":
         ydl_opts = {
             **common_opts,
-            'format': 'bestaudio/best',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
+            'format': 'bestaudio/best',  # Get best audio quality
+            'outtmpl': 'downloads/%(title)s.%(ext)s',
         }
-        expected_ext = "mp3"
     else:  # video
         ydl_opts = {
             **common_opts,
             'format': 'best',  # Just get the best combined format
+            'outtmpl': 'downloads/%(title)s.%(ext)s',
         }
-        expected_ext = "mp4"
     
     try:
-        # Generate a safe filename using video ID
-        video_id = get_video_id(url)
-        base_filename = f"downloads/video_{video_id}"
-        ydl_opts['outtmpl'] = f"{base_filename}.%(ext)s"
-        
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            try:
-                # First try to get info
-                info_dict = ydl.extract_info(url, download=False)
-                title = info_dict.get('title', f'video_{video_id}') if isinstance(info_dict, dict) else f'video_{video_id}'
-                
-                # Then download
-                ydl.download([url])
-                
-                # Look for the downloaded file
-                if download_type == "audio":
-                    filename = f"{base_filename}.mp3"
-                else:
-                    # For video, check any extension
-                    files = glob.glob(f"{base_filename}.*")
-                    filename = files[0] if files else None
-                
-                if filename and os.path.exists(filename):
-                    return title, filename
-                else:
-                    raise Exception("Downloaded file not found")
-                    
-            except Exception as e:
-                raise Exception(f"Download failed: {str(e)}")
-                
+            # Download the video/audio
+            info = ydl.extract_info(url, download=True)
+            if info:
+                title = info.get('title', 'download')
+                # Find the downloaded file
+                files = glob.glob(f"downloads/{title}.*")
+                if files:
+                    return title, files[0]
+            return None, None
     except Exception as e:
         st.error(f"Error downloading: {str(e)}")
-        if "ffprobe" in str(e) or "ffmpeg" in str(e):
-            st.error("FFmpeg is required. Please install FFmpeg and try again.")
-        else:
-            st.info("If the error persists, try updating yt-dlp using: pip install -U yt-dlp")
+        st.info("If the error persists, try updating yt-dlp using: pip install -U yt-dlp")
         return None, None
 
 # Main app
@@ -215,20 +183,20 @@ if url:
         
         with col2:
             st.write("🎵 Audio Only")
-            if not ffmpeg_available:
-                st.error("FFmpeg required for audio downloads")
-            if st.button("Download Audio (MP3)", disabled=not ffmpeg_available):
+            if st.button("Download Audio"):
                 with st.spinner("Downloading audio... This may take a moment."):
                     title, file_path = download_video(url, "audio")
                     if title and file_path:
                         st.success(f"Successfully downloaded audio: {title}")
                         # Add download button
                         with open(file_path, 'rb') as f:
+                            ext = os.path.splitext(file_path)[1][1:]  # Get file extension
+                            mime_type = "audio/mp3" if ext == "mp3" else "audio/m4a"
                             st.download_button(
                                 label="Save Audio to Computer",
                                 data=f,
                                 file_name=os.path.basename(file_path),
-                                mime="audio/mp3"
+                                mime=mime_type
                             )
     else:
         st.error("Invalid YouTube URL. Please enter a valid YouTube video URL.") 
